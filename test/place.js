@@ -1,6 +1,6 @@
 import mochaPlugin from 'serverless-mocha-plugin'
 const expect = mochaPlugin.chai.expect
-const wrapped = mochaPlugin.getWrapper('hello', '/src/handler', 'hello')
+const wrapped = mochaPlugin.getWrapper('gateway', '/src/handler', 'gateway')
 
 describe('Result', () => {
 	it('should always pass', () =>{
@@ -14,7 +14,6 @@ describe('Result', () => {
 		}))
 		expect(res.body).to.not.be.empty
 		res.body = JSON.parse(res.body)
-		expect(res.body.result).to.not.be.empty
-		expect(res.body.result).to.equal('success')
+		expect(res.body).to.not.be.empty
 	})
 })
