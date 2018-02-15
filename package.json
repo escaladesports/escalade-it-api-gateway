@@ -1,0 +1,47 @@
+{
+  "name": "escalade-it-api-gateway",
+  "version": "0.0.0",
+  "main": "src/handler.js",
+  "author": "Kennedy Rose <krose@escaladesports.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "serverless package",
+    "deploy": "esca-scripts deploy --serverless --stage staging",
+    "deploy-production": "esca-scripts test --serverless --stage production && esca-scripts deploy --serverless --stage production --prompt",
+    "dev": "esca-scripts dev --serverless",
+    "encrypt": "envdotjs",
+    "invoke": "serverless invoke local --function hello",
+    "logs": "esca-scripts logs",
+    "prepush": "esca-scripts prevent-push",
+    "reset": "rm -rf .git && git init && git add . && git commit -m 'Initial commit'",
+    "test": "esca-scripts test --serverless --stage staging",
+    "test-production": "esca-scripts test --serverless --stage production",
+    "unencrypt": "envdotjs --unencrypt"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-minify-webpack-plugin": "^0.2.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "esca-scripts": "^0.9.0",
+    "exeq": "^3.0.0",
+    "git-rev-promises": "^1.0.8",
+    "husky": "^0.14.3",
+    "serverless": "^1.25.0",
+    "serverless-mocha-plugin": "^1.7.0",
+    "serverless-plugin-optimize": "^3.0.4-rc.1",
+    "webpack": "^3.10.0",
+    "yn-cli": "^1.0.0"
+  },
+  "dependencies": {
+    "envdotjs": "^1.1.3",
+    "middy": "^0.5.2",
+    "serverless-offline": "^3.16.0"
+  }
+}

@@ -1,0 +1,35 @@
+service: escalade-it-api-gateway
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: us-east-1
+  stage: "${opt:stage, 'development'}"
+  environment:
+    NODE_ENV: "${opt:stage, 'development'}"
+
+functions:
+  gateway:
+    handler: src/handler.gateway
+    events:
+      - http:
+          path: /{any+}
+          method: ANY
+          cors: true
+
+package:
+  individually: true
+  include:
+    - env.js.enc
+    - envdotjs-key
+
+custom:
+  serverless-offline:
+    babelOptions:
+      presets: ["es2015", "stage-3"]
+      plugins: ["transform-runtime"]
+
+plugins:
+  - serverless-plugin-optimize
+  - serverless-mocha-plugin
+  - serverless-offline
