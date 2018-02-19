@@ -1,58 +1,64 @@
 import middy from 'middy'
 import { jsonBodyParser, httpErrorHandler, cors } from 'middy/middlewares'
-import fetch from 'fetch-retry'
+import fetch from 'isomorphic-fetch'
 
+const headers = {
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Allow-Credentials": true
+}
 
-async function passThrough(event, context) {
-
+// Export function with middleware
+async function gateway(event, context, callback) {
+	console.log('ENDPOINT HIT')
 	let subdomain = 'apis'
 
 	// Get path
 	let path = event.path || '/'
 	path = path.split('/')
-	if(!path[0]){
+	if (!path[0]) {
 		path.shift()
 	}
-	if(path[0] === 'testing'){
+	if (path[0] === 'testing') {
 		subdomain = 'apistest'
 		path.shift()
 	}
-	else if(path[0] === 'production'){
+	else if (path[0] === 'production') {
 		path.shift()
 	}
 
-
-	let res = await fetch(`https://${subdomain}.escaladesports.com/v1/${path.join('/')}`, {
-		headers: event.headers,
+	// Fetch from API
+	let url = `https://${subdomain}.escaladesports.com/v1/${path.join('/')}`
+	let options = {
+		//headers: event.headers,
 		body: event.body,
-		method: event.httpMethod,
-	})
-	let body = await res.text()
-	let status = res.status
+		method: event.httpMethod || 'GET',
+		rejectUnauthorized: false,
+	}
+	console.log(`Fetching ${url}:`, options)
 
+	let res
+	let body
+	try {
+		res = await fetch(url, options)
+		body = await res.text()
+	}
+	catch(err){
+		console.error(err)
+		return {
+			statusCode: 500,
+			error: err,
+		}
+	}
+	console.log('STATUS:', res.status)
+	console.log('BODY:', body)
 	return {
-		status,
+		statusCode: res.status,
 		body,
 	}
 }
 
-// Export function with middleware
-module.exports.gateway = middy(passThrough)
-	.use(cors())
-	.use(httpErrorHandler())
 
-/*
-module.exports.gateway = middy((event, context, callback) => {
-		console.log(event)
-		callback(null, {
-			body: JSON.stringify({
-				method: event.method,
-				path: event.path,
-				headers: event.headers,
-				result: 'success',
-			})
-		})
-	})
+
+module.exports.gateway = middy(gateway)
 	.use(cors())
 	.use(httpErrorHandler())
-*/

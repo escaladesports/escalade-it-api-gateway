@@ -6,11 +6,11 @@
   "license": "MIT",
   "scripts": {
     "build": "serverless package",
-    "deploy": "esca-scripts deploy --serverless --stage production",
+    "deploy": "esca-scripts deploy --serverless --stage staging",
     "dev": "esca-scripts dev --serverless",
     "encrypt": "envdotjs",
     "invoke": "serverless invoke local --function gateway",
-    "logs": "serverless logs --function gateway --tail --stage production",
+    "logs": "serverless logs --function gateway --tail --stage staging",
     "prepush": "esca-scripts prevent-push",
     "reset": "rm -rf .git && git init && git add . && git commit -m 'Initial commit'",
     "test": "esca-scripts test --serverless --stage staging",
