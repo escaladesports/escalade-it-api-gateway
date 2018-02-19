@@ -2,14 +2,25 @@ import middy from 'middy'
 import { jsonBodyParser, httpErrorHandler, cors } from 'middy/middlewares'
 import fetch from 'isomorphic-fetch'
 
-const headers = {
-	"Access-Control-Allow-Origin": "*",
-	"Access-Control-Allow-Credentials": true
+const allowedHeaders = [
+	'Authorization',
+	'Debug',
+	'Content-Type',
+]
+
+function filterHeaders(obj){
+	let res = {}
+	for(let i in obj){
+		if(allowedHeaders.indexOf(i) !== -1){
+			res[i] = obj[i]
+		}
+	}
+	return res
 }
 
 // Export function with middleware
 async function gateway(event, context, callback) {
-	console.log('ENDPOINT HIT')
+	console.log('Endpoint hit...')
 	let subdomain = 'apis'
 
 	// Get path
@@ -29,7 +40,7 @@ async function gateway(event, context, callback) {
 	// Fetch from API
 	let url = `https://${subdomain}.escaladesports.com/v1/${path.join('/')}`
 	let options = {
-		//headers: event.headers,
+		headers: filterHeaders(event.headers),
 		body: event.body,
 		method: event.httpMethod || 'GET',
 		rejectUnauthorized: false,
@@ -49,8 +60,8 @@ async function gateway(event, context, callback) {
 			error: err,
 		}
 	}
-	console.log('STATUS:', res.status)
-	console.log('BODY:', body)
+	console.log('Status:', res.status)
+	console.log('Body:', body)
 	return {
 		statusCode: res.status,
 		body,
