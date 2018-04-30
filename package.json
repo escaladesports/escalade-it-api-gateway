@@ -11,6 +11,7 @@
     "encrypt": "envdotjs",
     "invoke": "serverless invoke local --function gateway",
     "logs": "serverless logs --function gateway --tail --stage staging",
+    "logs-production": "serverless logs --function gateway --tail --stage production",
     "prepush": "esca-scripts prevent-push",
     "reset": "rm -rf .git && git init && git add . && git commit -m 'Initial commit'",
     "test": "esca-scripts test --serverless --stage staging",
